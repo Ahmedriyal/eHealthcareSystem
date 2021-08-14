@@ -5,6 +5,7 @@ from .models import *
 from django.db.models import Q
 from datetime import date
 from .filters import AppointmentFilter
+import os
 from cryptography.fernet import Fernet
 
 
@@ -22,7 +23,6 @@ def register(request):
         password = request.POST['password']
         password_confirm = request.POST['password_confirm']
         patient = request.POST['patient']
-
 
         if password == password_confirm:
             if User.objects.filter(username=username).exists():
@@ -48,7 +48,6 @@ def register(request):
                     return redirect('doctor')
                 # auth.login(request, user)
 
-
                 # messages.info(request, "User successfully created")
                 # return redirect('register')
         else:
@@ -67,10 +66,7 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            # if user.usertype.patient == False:
-            #     return redirect('doctor')
-            # else:
-            #     return redirect('patient')
+
             return redirect('/')
         else:
             messages.info(request, "Wrong username or password")
@@ -83,6 +79,18 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('/')
+
+
+# /----- Views for Search -----/
+def searchResult(request):
+    if request.method == "GET":
+        searched = request.GET.get('searched')
+        result = doctorInfo.objects.all().filter(Q(fullName__icontains=searched) | Q(speciality__icontains=searched))
+
+        context = {'result': result, 'searched': searched}
+        return render(request, 'html/searchResult.html', context)
+    else:
+        return render(request, 'html/searchResult.html')
 
 
 # /----- Views for Doctor Information Form -----/
@@ -99,6 +107,7 @@ def doctor(request):
 
         doctorinfo = doctorInfo(fullName=fullName, mobile=mobile, speciality=speciality, degree=degree,
                                 hospitalName=hospitalName, fees=fees, visitingHours=visitingHours, image=image)
+
         if request.user.is_authenticated:
             user = request.user
             doctorinfo.user_id = user.id
@@ -115,43 +124,6 @@ def doctorsList(request):
 
     context = {'doctors': doctors}
     return render(request, 'html/doctorsList.html', context)
-
-
-# /----- Views for Patient Information Form -----/
-def patient(request):
-    if request.method == 'POST':
-        fullName = request.POST['fullName']
-        address = request.POST['address']
-        phoneNumber = request.POST['phoneNumber']
-        DoB = request.POST['DoB']
-        age = request.POST['age']
-        gender = request.POST['gender']
-        bloodGroup = request.POST['bloodGroup']
-        bloodPressure = request.POST['bloodPressure']
-
-        patientinfo = patientInfo(fullName=fullName, address=address, phoneNumber=phoneNumber, DoB=DoB,
-                                  age=age, gender=gender, bloodGroup=bloodGroup, bloodPressure=bloodPressure)
-
-        if request.user.is_authenticated:
-            user = request.user
-            patientinfo.user_id = user.id
-            patientinfo.save()
-            messages.info(request, "Thank You, Successfully submitted")
-            return redirect('patient')
-    else:
-        return render(request, 'html/patient.html')
-
-
-# /----- Views for Search -----/
-def searchResult(request):
-    if request.method == "GET":
-        searched = request.GET.get('searched')
-        result = doctorInfo.objects.all().filter(Q(fullName__icontains=searched) | Q(speciality__icontains=searched))
-
-        context = {'result': result, 'searched': searched}
-        return render(request, 'html/searchResult.html', context)
-    else:
-        return render(request, 'html/searchResult.html')
 
 
 # /----- Views for Appointment -----/
@@ -189,7 +161,8 @@ def doctorDashboard(request):
         myFilter = AppointmentFilter(request.GET, queryset=appointments)
         appointments = myFilter.qs
 
-    context = {'doctor': doctor, 'appointments': appointments, 'appointments_count': appointments_count, 'myFilter': myFilter}
+    context = {'doctor': doctor, 'appointments': appointments, 'appointments_count': appointments_count,
+               'myFilter': myFilter}
     return render(request, 'html/doctorDashboard.html', context)
 
 
@@ -219,40 +192,51 @@ def doctorProfile(request):
 
 
 # /----- Views for Doctor Update Profile -----/
-def doctorUpdateProfile(request):
-    if request.user.is_authenticated:
-        user = request.user
-        doctor = doctorInfo.objects.get(user=user)
+def doctorUpdateProfile(request, pk):
+    doctor = doctorInfo.objects.get(id=pk)
 
-        if request.method == 'POST':
-            doctor = doctorInfo(request.POST, request.FILES or None)
-            # fullName = request.POST['fullName']
-            # mobile = request.POST['mobile']
-            # speciality = request.POST['speciality']
-            # degree = request.POST['degree']
-            # hospitalName = request.POST['hospitalName']
-            # fees = request.POST['fees']
-            # visitingHours = request.POST['visitingHours']
-            # image = request.FILES['image']
+    if request.method == 'POST':
+        doctor.fullName = request.POST['fullName']
+        doctor.mobile = request.POST['mobile']
+        doctor.speciality = request.POST['speciality']
+        doctor.degree = request.POST['degree']
+        doctor.hospitalName = request.POST['hospitalName']
+        doctor.fees = request.POST['fees']
+        doctor.visitingHours = request.POST['visitingHours']
+        if len(request.FILES) != 0:
+            if len(doctor.image) > 0:
+                os.remove(doctor.image.path)
+            doctor.image = request.FILES['image']
+        doctor.save()
+        return redirect('doctorProfile')
 
-            profile_qs = doctorInfo.objects.filter(user=request.user)
-            if profile_qs.exists():
-                profile_qs.update(user=request.user, fullName=request.POST['fullName'], mobile=request.POST['mobile'],
-                                  speciality=request.POST['speciality'],
-                              degree=request.POST['degree'], hospitalName=request.POST['hospitalName'],
-                                  fees=request.POST['fees'], visitingHours=request.POST['visitingHours'],
-                              image=request.FILES['image'])
-            else:
-                doctorInfo.objects.create(user=request.user, fullName=request.POST['fullName'], mobile=request.POST['mobile'],
-                                  speciality=request.POST['speciality'],
-                              degree=request.POST['degree'], hospitalName=request.POST['hospitalName'],
-                                  fees=request.POST['fees'], visitingHours=request.POST['visitingHours'],
-                              image=request.FILES['image'])
-
-                return redirect('doctorProfile')
+    context = {'doctor': doctor}
+    return render(request, 'html/doctorUpdateProfile.html', context)
 
 
-    return render(request, 'html/doctorUpdateProfile.html', {'doctor': doctor})
+# /----- Views for Patient Information Form -----/
+def patient(request):
+    if request.method == 'POST':
+        fullName = request.POST['fullName']
+        address = request.POST['address']
+        phoneNumber = request.POST['phoneNumber']
+        DoB = request.POST['DoB']
+        age = request.POST['age']
+        gender = request.POST['gender']
+        bloodGroup = request.POST['bloodGroup']
+        bloodPressure = request.POST['bloodPressure']
+
+        patientinfo = patientInfo(fullName=fullName, address=address, phoneNumber=phoneNumber, DoB=DoB,
+                                  age=age, gender=gender, bloodGroup=bloodGroup, bloodPressure=bloodPressure)
+
+        if request.user.is_authenticated:
+            user = request.user
+            patientinfo.user_id = user.id
+            patientinfo.save()
+            messages.info(request, "Thank You, Successfully submitted")
+            return redirect('patient')
+    else:
+        return render(request, 'html/patient.html')
 
 
 # /----- Views for Patient Dashboard -----/
@@ -265,5 +249,6 @@ def patientDashboard(request):
     return render(request, 'html/patientDashboard.html', context)
 
 
+# /----- Views for Prescription -----/
 def prescription(request):
     return render(request, 'html/prescription.html')
