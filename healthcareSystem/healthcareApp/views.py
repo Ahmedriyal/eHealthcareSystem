@@ -250,6 +250,34 @@ def patientDashboard(request):
     context = {'patient': patient, 'appointments': appointments, 'appointments_count': appointments_count}
     return render(request, 'html/patientDashboard.html', context)
 
+# /----- Views for Dashboard | Patient Profile -----/
+def patientProfile(request):
+    if request.user.is_authenticated:
+        user = request.user
+        patient = patientInfo.objects.get(user=user)
+
+    context = {'patient': patient}
+    return render(request, 'html/patientProfile.html', context)
+
+
+# /----- Views for Patient Update Profile -----/
+def patientUpdateProfile(request, pk):
+    patient = patientInfo.objects.get(id=pk)
+
+    if request.method == 'POST':
+        patient.fullName = request.POST['fullName']
+        patient.address = request.POST['address']
+        patient.phoneNumber = request.POST['phoneNumber']
+        patient.DoB = request.POST['DoB']
+        patient.age = request.POST['age']
+        patient.gender = request.POST['gender']
+        patient.bloodGroup = request.POST['bloodGroup']
+        patient.bloodPressure = request.POST['bloodPressure']
+        patient.save()
+        return redirect('patientProfile')
+
+    context = {'patient': patient}
+    return render(request, 'html/patientUpdateProfile.html', context)
 
 # /----- Views for Prescription -----/
 def prescription(request):
