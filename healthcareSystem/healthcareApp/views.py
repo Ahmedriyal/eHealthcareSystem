@@ -243,9 +243,11 @@ def patient(request):
 def patientDashboard(request):
     if request.user.is_authenticated:
         user = request.user
-        patient = patientInfo.objects.get(user=user)
+        # patient = patientInfo.objects.get(user=user)
+        appointments = user.appointment_set.all().order_by('date')
+        appointments_count = appointments.count()
 
-    context = {'patient': patient}
+    context = {'patient': patient, 'appointments': appointments, 'appointments_count': appointments_count}
     return render(request, 'html/patientDashboard.html', context)
 
 
