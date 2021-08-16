@@ -28,14 +28,14 @@
             <div class="row mt-5 mb-3">
             
                 <div class="col-lg mt-3 ms-3">
-                    <h1>{{patient.fullName}}</h1>
-                    <h6 class="border-bottom border-dark mb-3"><label></label>{{patient.address}}</h6>
-                    <h6 class=""><label></label>{{patient.phoneNumber}}</h6>
-                    <h6 class=""><label>Your email:</label> {{patient.user.email}}</h6>
-                    <h6 class=""><label></label> {{patient.DoB}}</h6>
-                    <h6 class=""><label></label> {{patient.age}}</h6>
-                    <h6 class=""><label></label> {{patient.bloodGroup}}</h6>
-                    <h6 class=""><label></label> {{patient.bloodPressure}}</h6>
+                    <h1 class="border-bottom border-dark">{{patient.fullName}}</h1>
+                    <h6 class=""><label>Address:</label> {{patient.address}}</h6>
+                    <h6 class=""><label>Mobile:</label> {{patient.phoneNumber}}</h6>
+                    <h6 class=""><label>Email:</label> {{patient.user.email}}</h6>
+                    <h6 class=""><label>Date of Birth:</label> {{patient.DoB}}</h6>
+                    <h6 class=""><label>Age:</label> {{patient.age}}</h6>
+                    <h6 class=""><label>Blood Group:</label> {{patient.bloodGroup}}</h6>
+                    <h6 class=""><label>Blood Pressure:</label> {{patient.bloodPressure}}</h6>
                     <a class="btn btn-primary btn-sm btn-block mt-4" href="{% url 'patientUpdateProfile' patient.id %}">Update Profile</a>
                 </div>
             </div>
