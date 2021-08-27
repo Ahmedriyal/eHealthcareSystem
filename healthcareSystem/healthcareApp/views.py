@@ -250,6 +250,7 @@ def patientDashboard(request):
     context = {'patient': patient, 'appointments': appointments, 'appointments_count': appointments_count}
     return render(request, 'html/patientDashboard.html', context)
 
+
 # /----- Views for Dashboard | Patient Profile -----/
 def patientProfile(request):
     if request.user.is_authenticated:
