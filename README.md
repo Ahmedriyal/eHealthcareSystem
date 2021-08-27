@@ -28,10 +28,10 @@ A management system for smart-Health Care.
 - Install Python. (Don't Forget to Tick 'Add to Path while installing Python)
 - Download this project zip folder and extract it.
 - Move to project folder in Terminal. Then run following Commands:          
-    pip install -r requirements.txt
+    - pip install -r requirements.txt
 - Open the MySql database admin panel into your browser and create a new database named "healthcareSystem".
 - Again go to the terminal and run the following Commands:
-    python manage.py makemigrations
-    python manage.py migrate
-    python manage.py runserver
+    - python manage.py makemigrations
+    - python manage.py migrate
+    - python manage.py runserver
 - Now enter the (http://127.0.0.1:8000/) URL in your browser.
