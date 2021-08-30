@@ -6,13 +6,76 @@ from django.db.models import Q
 from datetime import date
 from .filters import AppointmentFilter
 import os
-from cryptography.fernet import Fernet
+# from cryptography.fernet import Fernet
+
+import cryptography
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+
+
+private_key = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=2048,
+    backend=default_backend()
+)
+
+pem = private_key.private_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PrivateFormat.PKCS8,
+    encryption_algorithm=serialization.NoEncryption()
+)
+
+with open('private_key.pem', 'wb') as f:
+    f.write(pem)
+
+public_key = private_key.public_key()
+
+pem = public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+)
+
+with open('public_key.pem', 'wb') as f:
+    f.write(pem)
+
+with open("private_key.pem", "rb") as key_file:
+    private_key = serialization.load_pem_private_key(
+        key_file.read(),
+        password=None,
+        backend=default_backend()
+    )
+
+with open("public_key.pem", "rb") as key_file:
+    public_key = serialization.load_pem_public_key(
+        key_file.read(),
+        backend=default_backend()
+    )
 
 
 # Create your views here.
 # /----- Views for Homepage -----/
 def home(request):
-    return render(request, 'html/home.html')
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+
+        contact = contactForm(name=name, email=email, message=message)
+        
+        if request.user.is_authenticated:
+            user = request.user
+            contact.user_id = user.id
+            contact.save()
+            return redirect('/')
+        else:
+            contact.save()
+            return redirect('/')
+    
+    else:
+        return render(request, 'html/home.html')
 
 
 # /----- Views for User Registration -----/
@@ -218,6 +281,17 @@ def doctorUpdateProfile(request, pk):
 def patient(request):
     if request.method == 'POST':
         fullName = request.POST['fullName']
+        b_fullName = bytes(fullName, 'utf-8')
+        encrypted = public_key.encrypt(
+            b_fullName,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+            )
+        )
+        print(encrypted)
+        # print(b_fullName)
         address = request.POST['address']
         phoneNumber = request.POST['phoneNumber']
         DoB = request.POST['DoB']
@@ -226,7 +300,7 @@ def patient(request):
         bloodGroup = request.POST['bloodGroup']
         bloodPressure = request.POST['bloodPressure']
 
-        patientinfo = patientInfo(fullName=fullName, address=address, phoneNumber=phoneNumber, DoB=DoB,
+        patientinfo = patientInfo(fullName=encrypted, address=address, phoneNumber=phoneNumber, DoB=DoB,
                                   age=age, gender=gender, bloodGroup=bloodGroup, bloodPressure=bloodPressure)
 
         if request.user.is_authenticated:

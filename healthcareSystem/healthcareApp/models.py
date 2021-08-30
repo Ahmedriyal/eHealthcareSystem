@@ -71,3 +71,12 @@ class Appointment(models.Model):
         (Evening_Slot, 'Evening Slot'),
     ]
     timeSlot = models.CharField(max_length=50, choices=timeSlot_choices)
+
+
+# Model for Contact
+class contactForm(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.ForeignKey(patientInfo, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=100, null=True, blank=True)
+    message = models.CharField(max_length=1000, null=True, blank=True)
