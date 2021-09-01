@@ -51,6 +51,7 @@
                             <th scope="col">Doctor Email</th>
                             <th scope="col">Time Slot</th>
                             <th scope="col">Appointment Date</th>
+                            <th scope="col"></th>    
                         </tr>
                         </thead>
                         <tbody>
@@ -60,6 +61,10 @@
                             <td>{{appointment.doctor.user.email}}</td>
                             <td>{{appointment.timeSlot}}</td>
                             <td>{{appointment.date}}</td>
+                            <td><a href="{% url 'delete' appointment.id %}" class="btn btn-sm btn-primary btn-block">Delete</a></td>
+                            <td><a href="{% url 'update' appointment.id %}" class="btn btn-sm btn-primary btn-block">Update</a></td>
+
+
                         </tr>
                         {% endfor %}
                         </tbody>
