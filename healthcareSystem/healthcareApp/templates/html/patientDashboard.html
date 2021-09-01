@@ -10,9 +10,11 @@
             <i class="fas fa-user-md me-2"></i>{{user.username}}
         </div>
         <div class="list-group list-group-flush my-3">
-            <a href="{% url 'patientDashboard' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+            <a href="{% url 'patientDashboard' %}"
+                class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                 <i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
-            <a href="{% url 'patientProfile' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+            <a href="{% url 'patientProfile' %}"
+                class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                 <i class="fas fa-user me-2"></i>Profile</a>
         </div>
     </div>
@@ -46,27 +48,28 @@
                 <div class="col">
                     <table class="table bg-white rounded shadow-sm table-hover">
                         <thead>
-                        <tr>
-                            <th scope="col">Doctor Name</th>
-                            <th scope="col">Doctor Email</th>
-                            <th scope="col">Time Slot</th>
-                            <th scope="col">Appointment Date</th>
-                            <th scope="col"></th>    
-                        </tr>
+                            <tr>
+                                <th scope="col">Doctor Name</th>
+                                <th scope="col">Doctor Email</th>
+                                <th scope="col">Time Slot</th>
+                                <th scope="col">Appointment Date</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for appointment in appointments %}
-                        <tr>
-                            <td>{{appointment.doctor.fullName}}</td>
-                            <td>{{appointment.doctor.user.email}}</td>
-                            <td>{{appointment.timeSlot}}</td>
-                            <td>{{appointment.date}}</td>
-                            <td><a href="{% url 'delete' appointment.id %}" class="btn btn-sm btn-primary btn-block">Delete</a></td>
-                            <td><a href="{% url 'update' appointment.id %}" class="btn btn-sm btn-primary btn-block">Update</a></td>
-
-
-                        </tr>
-                        {% endfor %}
+                            {% for appointment in appointments %}
+                            <tr>
+                                <td>{{appointment.doctor.fullName}}</td>
+                                <td>{{appointment.doctor.user.email}}</td>
+                                <td>{{appointment.timeSlot}}</td>
+                                <td>{{appointment.date}}</td>
+                                <td><a href="{% url 'update' appointment.id %}"
+                                        class="btn btn-sm btn-warning btn-block">Update</a></td>
+                                <td><a href="{% url 'delete' appointment.id %}"
+                                        class="btn btn-sm btn-danger btn-block">Delete</a></td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
