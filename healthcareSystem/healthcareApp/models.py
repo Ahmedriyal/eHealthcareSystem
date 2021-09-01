@@ -72,7 +72,6 @@ class Appointment(models.Model):
     ]
     timeSlot = models.CharField(max_length=50, choices=timeSlot_choices)
 
-
 # Model for Contact
 class contactForm(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

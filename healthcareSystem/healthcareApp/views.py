@@ -355,6 +355,35 @@ def patientUpdateProfile(request, pk):
     return render(request, 'html/patientUpdateProfile.html', context)
 
 
+# views for appointment delete---patient dashboard 
+def delete(request,id):
+    appointment = Appointment.objects.get(id = id) 
+    appointment.delete()
+
+    return redirect('patientDashboard')
+
+# views for appointment update---patient dashboard 
+def update(request,id):
+    appointment = Appointment.objects.get(id=id)
+    if request.method == 'POST':
+        name = request.POST['name']
+        phone = request.POST['phone']
+        email = request.POST['email']
+        date = request.POST['date']
+        timeSlot = request.POST['timeSlot']
+
+        appointment_qs = Appointment.objects.filter(user = request.user)
+        if appointment_qs.exists():
+            appointment_qs.update(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)
+            return redirect('patientDashboard')    
+        else:
+            Appointment.objects.create(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)    
+
+    context = {'appointment':appointment}
+    return render(request, 'html/appointment.html', context)
+
+
+
 # /----- Views for Prescription -----/
 def prescription(request):
     return render(request, 'html/prescription.html')
