@@ -282,7 +282,7 @@ def patient(request):
     if request.method == 'POST':
         fullName = request.POST['fullName']
         b_fullName = bytes(fullName, 'utf-8')
-        encrypted = public_key.encrypt(
+        encrypted_fullName = public_key.encrypt(
             b_fullName,
             padding.OAEP(
                 mgf=padding.MGF1(algorithm=hashes.SHA256()),
@@ -290,7 +290,7 @@ def patient(request):
                 label=None
             )
         )
-        print(encrypted)
+        # print(encrypted)
         # print(b_fullName)
         address = request.POST['address']
         phoneNumber = request.POST['phoneNumber']
@@ -298,10 +298,19 @@ def patient(request):
         age = request.POST['age']
         gender = request.POST['gender']
         bloodGroup = request.POST['bloodGroup']
+        b_bloodGroup = bytes(bloodGroup, 'utf-8')
+        encrypted_bloodGroup = public_key.encrypt(
+            b_bloodGroup,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+            )
+        )
         bloodPressure = request.POST['bloodPressure']
 
-        patientinfo = patientInfo(fullName=encrypted, address=address, phoneNumber=phoneNumber, DoB=DoB,
-                                  age=age, gender=gender, bloodGroup=bloodGroup, bloodPressure=bloodPressure)
+        patientinfo = patientInfo(fullName=encrypted_fullName, address=address, phoneNumber=phoneNumber, DoB=DoB,
+                                  age=age, gender=gender, bloodGroup=encrypted_bloodGroup, bloodPressure=bloodPressure)
 
         if request.user.is_authenticated:
             user = request.user
