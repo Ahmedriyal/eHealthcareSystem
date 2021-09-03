@@ -64,7 +64,7 @@
                                 <td>{{appointment.doctor.user.email}}</td>
                                 <td>{{appointment.timeSlot}}</td>
                                 <td>{{appointment.date}}</td>
-                                <td><a href="{% url 'update' appointment.id %}"
+                                <td><a href="{% url 'appointmentUpdate' appointment.id %}"
                                         class="btn btn-sm btn-warning btn-block">Update</a></td>
                                 <td><a href="{% url 'delete' appointment.id %}"
                                         class="btn btn-sm btn-danger btn-block">Delete</a></td>

@@ -22,7 +22,7 @@ urlpatterns = [
 	path("doctor/<int:doctor_id>/", views.appointment, name="appointment"),
 	path("prescription", views.prescription, name="prescription"),
 	path('delete/<int:id>/', views.delete, name="delete"),
-	path('update/<str:id>/', views.update, name="update"),
+	path('appointmentUpdate/<str:pk>/', views.appointmentUpdate, name="appointmentUpdate"),
 
 
 	
