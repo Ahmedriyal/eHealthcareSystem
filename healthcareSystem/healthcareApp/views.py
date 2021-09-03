@@ -372,24 +372,27 @@ def delete(request,id):
     return redirect('patientDashboard')
 
 # views for appointment update---patient dashboard 
-def update(request,id):
-    appointment = Appointment.objects.get(id=id)
+def appointmentUpdate(request, pk):
+    appointment = Appointment.objects.get(id=pk)
+    
     if request.method == 'POST':
-        name = request.POST['name']
-        phone = request.POST['phone']
-        email = request.POST['email']
-        date = request.POST['date']
-        timeSlot = request.POST['timeSlot']
+        appointment.name = request.POST['name']
+        appointment.phone = request.POST['phone']
+        appointment.email = request.POST['email']
+        appointment.date = request.POST['date']
+        appointment.timeSlot = request.POST['timeSlot']
+        appointment.save()
+        return redirect('patientDashboard')
 
-        appointment_qs = Appointment.objects.filter(user = request.user)
-        if appointment_qs.exists():
-            appointment_qs.update(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)
-            return redirect('patientDashboard')    
-        else:
-            Appointment.objects.create(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)    
+        # appointment_qs = Appointment.objects.filter(user = request.user)
+        # if appointment_qs.exists():
+        #     appointment_qs.update(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)
+        #     return redirect('patientDashboard')    
+        # else:
+        #     Appointment.objects.create(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)    
 
     context = {'appointment':appointment}
-    return render(request, 'html/appointment.html', context)
+    return render(request, 'html/appointmentUpdate.html', context)
 
 
 
