@@ -5,8 +5,10 @@ from .models import *
 from django.db.models import Q
 from datetime import date
 from .filters import AppointmentFilter
+
+from .Enc import enc
+from .dec import dec
 import os
-# from cryptography.fernet import Fernet
 
 import cryptography
 from cryptography.hazmat.backends import default_backend
@@ -41,12 +43,13 @@ pem = public_key.public_bytes(
 with open('public_key.pem', 'wb') as f:
     f.write(pem)
 
-with open("private_key.pem", "rb") as key_file:
-    private_key = serialization.load_pem_private_key(
-        key_file.read(),
-        password=None,
-        backend=default_backend()
-    )
+# with open("private_key.pem", "rb") as key_file:
+#     private_key = serialization.load_pem_private_key(
+#         key_file.read(),
+#         password=None,
+#         backend=default_backend()
+#     )
+
 
 with open("public_key.pem", "rb") as key_file:
     public_key = serialization.load_pem_public_key(
@@ -64,7 +67,7 @@ def home(request):
         message = request.POST['message']
 
         contact = contactForm(name=name, email=email, message=message)
-        
+
         if request.user.is_authenticated:
             user = request.user
             contact.user_id = user.id
@@ -73,7 +76,7 @@ def home(request):
         else:
             contact.save()
             return redirect('/')
-    
+
     else:
         return render(request, 'html/home.html')
 
@@ -97,7 +100,8 @@ def register(request):
                 return redirect('register')
 
             else:
-                user = User.objects.create_user(username=username, email=email, password=password)
+                user = User.objects.create_user(
+                    username=username, email=email, password=password)
                 # usertype = userType(patient=patient, user=user)
                 if patient == 'Patient':
                     usertype = userType.objects.create(user=user, patient=True)
@@ -148,7 +152,8 @@ def logout(request):
 def searchResult(request):
     if request.method == "GET":
         searched = request.GET.get('searched')
-        result = doctorInfo.objects.all().filter(Q(fullName__icontains=searched) | Q(speciality__icontains=searched))
+        result = doctorInfo.objects.all().filter(Q(fullName__icontains=searched)
+                                                 | Q(speciality__icontains=searched))
 
         context = {'result': result, 'searched': searched}
         return render(request, 'html/searchResult.html', context)
@@ -200,7 +205,8 @@ def appointment(request, doctor_id):
         date = request.POST['date']
         timeSlot = request.POST['timeSlot']
 
-        appointmentinfo = Appointment(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)
+        appointmentinfo = Appointment(
+            name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)
         if request.user.is_authenticated:
             user = request.user
             appointmentinfo.user_id = user.id
@@ -219,7 +225,8 @@ def doctorDashboard(request):
     if request.user.is_authenticated:
         user = request.user
         doctor = doctorInfo.objects.get(user=user)
-        appointments = doctor.appointment_set.filter(date=date.today()).order_by('date')
+        appointments = doctor.appointment_set.filter(
+            date=date.today()).order_by('date')
         appointments_count = appointments.count()
         myFilter = AppointmentFilter(request.GET, queryset=appointments)
         appointments = myFilter.qs
@@ -282,15 +289,18 @@ def patient(request):
     if request.method == 'POST':
         fullName = request.POST['fullName']
         b_fullName = bytes(fullName, 'utf-8')
-        encrypted_fullName = public_key.encrypt(
-            b_fullName,
-            padding.OAEP(
-                mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                algorithm=hashes.SHA256(),
-                label=None
-            )
-        )
-        # print(encrypted)
+        # encrypted_fullName = public_key.encrypt(
+        #     b_fullName,
+        #     padding.OAEP(
+        #         mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        #         algorithm=hashes.SHA256(),
+        #         label=None
+        #     )
+        # )
+        encrypted_fullName = enc(b_fullName)
+        print(len(encrypted_fullName))
+        # print(dec_fullName)
+        # print(encrypted_fullName)
         # print(b_fullName)
         address = request.POST['address']
         phoneNumber = request.POST['phoneNumber']
@@ -330,15 +340,40 @@ def patientDashboard(request):
         appointments = user.appointment_set.all().order_by('date')
         appointments_count = appointments.count()
 
-    context = {'patient': patient, 'appointments': appointments, 'appointments_count': appointments_count}
+    context = {'patient': patient, 'appointments': appointments,
+               'appointments_count': appointments_count}
     return render(request, 'html/patientDashboard.html', context)
 
 
 # /----- Views for Dashboard | Patient Profile -----/
 def patientProfile(request):
+    # private_key = ''
+    # with open("private_key.pem", "rb") as key_file:
+    #     private_key = serialization.load_pem_private_key(
+    #         key_file.read(),
+    #         password=None,
+    #         backend=default_backend()
+    #     )
+    # print(private_key)
+    # print('==========================')
     if request.user.is_authenticated:
         user = request.user
         patient = patientInfo.objects.get(user=user)
+        patient.dec_bloodGroup = private_key.decrypt(
+            patient.bloodGroup,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+            )
+        )
+        # print('================')
+        # print(patient.fullName)
+        #fullName = patient.fullName
+
+        fullName = dec(patient.fullName)
+
+        print(fullName)
 
     context = {'patient': patient}
     return render(request, 'html/patientProfile.html', context)
@@ -364,17 +399,19 @@ def patientUpdateProfile(request, pk):
     return render(request, 'html/patientUpdateProfile.html', context)
 
 
-# views for appointment delete---patient dashboard 
-def delete(request,id):
-    appointment = Appointment.objects.get(id = id) 
+# views for appointment delete---patient dashboard
+def delete(request, id):
+    appointment = Appointment.objects.get(id=id)
     appointment.delete()
 
     return redirect('patientDashboard')
 
-# views for appointment update---patient dashboard 
+# views for appointment update---patient dashboard
+
+
 def appointmentUpdate(request, pk):
     appointment = Appointment.objects.get(id=pk)
-    
+
     if request.method == 'POST':
         appointment.name = request.POST['name']
         appointment.phone = request.POST['phone']
@@ -387,13 +424,12 @@ def appointmentUpdate(request, pk):
         # appointment_qs = Appointment.objects.filter(user = request.user)
         # if appointment_qs.exists():
         #     appointment_qs.update(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)
-        #     return redirect('patientDashboard')    
+        #     return redirect('patientDashboard')
         # else:
-        #     Appointment.objects.create(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)    
+        #     Appointment.objects.create(name=name, phone=phone, email=email, date=date, timeSlot=timeSlot)
 
-    context = {'appointment':appointment}
+    context = {'appointment': appointment}
     return render(request, 'html/appointmentUpdate.html', context)
-
 
 
 # /----- Views for Prescription -----/

@@ -5,6 +5,8 @@ from django_cryptography.fields import encrypt
 
 # Create your models here.
 # Model for User Registration Type(Patient/Doctor)
+
+
 class userType(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE
@@ -17,7 +19,8 @@ class userType(models.Model):
 
 # Model for Doctors Information
 class doctorInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
     fullName = models.CharField(max_length=200, null=True, blank=True)
     mobile = models.CharField(max_length=50, null=True, blank=True)
     speciality = models.CharField(max_length=200, null=True, blank=True)
@@ -33,8 +36,9 @@ class doctorInfo(models.Model):
 
 # Model for Patient Information
 class patientInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    fullName = models.CharField(max_length=200, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    fullName = models.TextField(null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     phoneNumber = models.CharField(max_length=20, null=True, blank=True)
     DoB = models.DateField(null=True, blank=True)
@@ -46,8 +50,10 @@ class patientInfo(models.Model):
         (Male, 'Male'),
         (Female, 'Female'),
     ]
-    gender = models.CharField(max_length=50, choices=gender_choices, null=True, blank=True)
-    bloodGroup = models.CharField(max_length=10, choices=Blood_Group_Choices, null=True, blank=True)
+    gender = models.CharField(
+        max_length=50, choices=gender_choices, null=True, blank=True)
+    bloodGroup = models.CharField(
+        max_length=10, choices=Blood_Group_Choices, null=True, blank=True)
     bloodPressure = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
@@ -56,9 +62,12 @@ class patientInfo(models.Model):
 
 # Model for Appointment Information
 class Appointment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    doctor = models.ForeignKey(doctorInfo, on_delete=models.CASCADE, null=True, blank=True)
-    patient = models.ForeignKey(patientInfo, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    doctor = models.ForeignKey(
+        doctorInfo, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.ForeignKey(
+        patientInfo, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     phone = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=100, null=True, blank=True)
@@ -73,9 +82,13 @@ class Appointment(models.Model):
     timeSlot = models.CharField(max_length=50, choices=timeSlot_choices)
 
 # Model for Contact
+
+
 class contactForm(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    patient = models.ForeignKey(patientInfo, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.ForeignKey(
+        patientInfo, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     email = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=1000, null=True, blank=True)
