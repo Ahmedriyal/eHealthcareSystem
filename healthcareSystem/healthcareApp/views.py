@@ -288,7 +288,7 @@ def doctorUpdateProfile(request, pk):
 def patient(request):
     if request.method == 'POST':
         fullName = request.POST['fullName']
-        b_fullName = bytes(fullName, 'utf-8')
+        #b_fullName = bytes(fullName, 'utf-8')
         # encrypted_fullName = public_key.encrypt(
         #     b_fullName,
         #     padding.OAEP(
@@ -297,8 +297,8 @@ def patient(request):
         #         label=None
         #     )
         # )
-        encrypted_fullName = enc(b_fullName)
-        print(len(encrypted_fullName))
+        #encrypted_fullName = enc(b_fullName)
+        # print(len(encrypted_fullName))
         # print(dec_fullName)
         # print(encrypted_fullName)
         # print(b_fullName)
@@ -317,9 +317,17 @@ def patient(request):
                 label=None
             )
         )
+
+        print("patient.bloodGroup _Encrypt")
+        print(encrypted_bloodGroup)
+        print(type(encrypted_bloodGroup))
+        print(len(encrypted_bloodGroup))
+
+        # changes
+
         bloodPressure = request.POST['bloodPressure']
 
-        patientinfo = patientInfo(fullName=encrypted_fullName, address=address, phoneNumber=phoneNumber, DoB=DoB,
+        patientinfo = patientInfo(fullName=fullName, address=address, phoneNumber=phoneNumber, DoB=DoB,
                                   age=age, gender=gender, bloodGroup=encrypted_bloodGroup, bloodPressure=bloodPressure)
 
         if request.user.is_authenticated:
@@ -359,6 +367,14 @@ def patientProfile(request):
     if request.user.is_authenticated:
         user = request.user
         patient = patientInfo.objects.get(user=user)
+
+        # print("patient.bloodGroup _Decrypt")
+        # print(patient.bloodGroup)
+        # print(len(patient.bloodGroup))
+        # print(type(patient.bloodGroup))
+        # patient.bloodGroup = bytes(patient.bloodGroup, 'utf-8')
+        # print(type(patient.bloodGroup))
+        #patient.bG = bytes(patient.bloodGroup, 'utf-8')
         patient.dec_bloodGroup = private_key.decrypt(
             patient.bloodGroup,
             padding.OAEP(
@@ -367,13 +383,17 @@ def patientProfile(request):
                 label=None
             )
         )
+        # print(type(patient.dec_bloodGroup))
+        #patientBloodGroup = patient.dec_bloodGroup.decode('UTF-8')
+        #str(patientBloodGroup, 'UTF-8')
+        # print(type(patientBloodGroup))
         # print('================')
         # print(patient.fullName)
         #fullName = patient.fullName
 
-        fullName = dec(patient.fullName)
+        #fullName = dec(patient.fullName)
 
-        print(fullName)
+        # print(fullName)
 
     context = {'patient': patient}
     return render(request, 'html/patientProfile.html', context)

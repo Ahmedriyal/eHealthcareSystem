@@ -53,7 +53,7 @@ class patientInfo(models.Model):
     gender = models.CharField(
         max_length=50, choices=gender_choices, null=True, blank=True)
     bloodGroup = models.CharField(
-        max_length=10, choices=Blood_Group_Choices, null=True, blank=True)
+        max_length=256, choices=Blood_Group_Choices, null=True, blank=True)
     bloodPressure = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
