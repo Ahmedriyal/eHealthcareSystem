@@ -383,10 +383,13 @@ def patientProfile(request):
                 label=None
             )
         )
-        # print(type(patient.dec_bloodGroup))
-        #patientBloodGroup = patient.dec_bloodGroup.decode('UTF-8')
+        print(patient.dec_bloodGroup)
+        print(type(patient.dec_bloodGroup))
+        print(len(patient.dec_bloodGroup))
+        patient.patientBloodGroup = patient.dec_bloodGroup.decode('UTF-8')
         #str(patientBloodGroup, 'UTF-8')
-        # print(type(patientBloodGroup))
+        print(patient.patientBloodGroup)
+        print(type(patient.patientBloodGroup))
         # print('================')
         # print(patient.fullName)
         #fullName = patient.fullName
