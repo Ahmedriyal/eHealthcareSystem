@@ -387,7 +387,6 @@ def patientProfile(request):
         print(type(patient.dec_bloodGroup))
         print(len(patient.dec_bloodGroup))
         patient.patientBloodGroup = patient.dec_bloodGroup.decode('UTF-8')
-        #str(patientBloodGroup, 'UTF-8')
         print(patient.patientBloodGroup)
         print(type(patient.patientBloodGroup))
         # print('================')
