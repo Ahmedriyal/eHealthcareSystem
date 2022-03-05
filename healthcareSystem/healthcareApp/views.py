@@ -6,8 +6,8 @@ from django.db.models import Q
 from datetime import date
 from .filters import AppointmentFilter
 
-from .Enc import enc
-from .dec import dec
+# from .Enc import enc
+# from .dec import dec
 import os
 
 import cryptography
@@ -18,37 +18,37 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
-private_key = rsa.generate_private_key(
-    public_exponent=65537,
-    key_size=2048,
-    backend=default_backend()
-)
+# private_key = rsa.generate_private_key(
+#     public_exponent=65537,
+#     key_size=2048,
+#     backend=default_backend()
+# )
 
-pem = private_key.private_bytes(
-    encoding=serialization.Encoding.PEM,
-    format=serialization.PrivateFormat.PKCS8,
-    encryption_algorithm=serialization.NoEncryption()
-)
+# pem = private_key.private_bytes(
+#     encoding=serialization.Encoding.PEM,
+#     format=serialization.PrivateFormat.PKCS8,
+#     encryption_algorithm=serialization.NoEncryption()
+# )
 
-with open('private_key.pem', 'wb') as f:
-    f.write(pem)
+# with open('private_key.pem', 'wb') as f:
+#     f.write(pem)
 
-public_key = private_key.public_key()
+# public_key = private_key.public_key()
 
-pem = public_key.public_bytes(
-    encoding=serialization.Encoding.PEM,
-    format=serialization.PublicFormat.SubjectPublicKeyInfo
-)
+# pem = public_key.public_bytes(
+#     encoding=serialization.Encoding.PEM,
+#     format=serialization.PublicFormat.SubjectPublicKeyInfo
+# )
 
-with open('public_key.pem', 'wb') as f:
-    f.write(pem)
+# with open('public_key.pem', 'wb') as f:
+#     f.write(pem)
 
-# with open("private_key.pem", "rb") as key_file:
-#     private_key = serialization.load_pem_private_key(
-#         key_file.read(),
-#         password=None,
-#         backend=default_backend()
-#     )
+with open("private_key.pem", "rb") as key_file:
+    private_key = serialization.load_pem_private_key(
+        key_file.read(),
+        password=None,
+        backend=default_backend()
+    )
 
 
 with open("public_key.pem", "rb") as key_file:
@@ -57,9 +57,10 @@ with open("public_key.pem", "rb") as key_file:
         backend=default_backend()
     )
 
-
 # Create your views here.
 # /----- Views for Homepage -----/
+
+
 def home(request):
     if request.method == 'POST':
         name = request.POST['name']
