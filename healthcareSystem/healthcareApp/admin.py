@@ -6,3 +6,5 @@ admin.site.register(userType)
 admin.site.register(doctorInfo)
 admin.site.register(patientInfo)
 admin.site.register(Appointment)
+
+# admin.site.register(VisitTime)

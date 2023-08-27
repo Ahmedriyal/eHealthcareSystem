@@ -55,3 +55,24 @@ Blood_Group_Choices = [
 ]
 
 
+#Visting Day choices
+Sunday = 'Sunday'
+Monday = 'Monday'
+Tuesday = 'Tuesday'
+Wednesday = 'Wednesday'
+Thursday = 'Thursday'
+Friday = 'Friday'
+Saturday = 'Saturday'
+
+
+Day_Choices = [
+    (Sunday, 'Sunday'),
+    (Monday, 'Monday'),
+    (Tuesday, 'Tuesday'),
+    (Wednesday, 'Wednesday'),
+    (Thursday, 'Thursday'),
+    (Friday, 'Friday'),
+    (Saturday, 'Saturday'),
+]
+
+

@@ -24,6 +24,8 @@ urlpatterns = [
 	path('delete/<int:id>/', views.delete, name="delete"),
 	path('appointmentUpdate/<str:pk>/', views.appointmentUpdate, name="appointmentUpdate"),
 
+	# path("doctor", views.visitTime, name="doctor"),
+
 
 	
 

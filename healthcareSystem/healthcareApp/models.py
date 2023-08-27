@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from .choices import *
 from django_cryptography.fields import encrypt
+from django.db.models import CharField, Model
+from django_mysql.models import ListCharField
 
 # Create your models here.
 # Model for User Registration Type(Patient/Doctor)
@@ -27,11 +29,25 @@ class doctorInfo(models.Model):
     degree = models.CharField(max_length=200, null=True, blank=True)
     hospitalName = models.CharField(max_length=200, null=True, blank=True)
     fees = models.IntegerField(null=True, blank=True)
-    visitingHours = models.CharField(max_length=500, null=True, blank=True)
+    # visitingHours = models.CharField(max_length=500, null=True, blank=True)
+    visitingHours = ListCharField(
+        base_field=CharField(max_length=100, null=True, blank=True),
+        size=20, null=True,
+        max_length=(20 * 110),  # 6 * 10 character nominals, plus commas
+    )
     image = models.ImageField(upload_to='doctorsPP', null=True, blank=True)
 
     def __str__(self):
         return self.fullName
+
+
+# class VisitTime(models.Model):
+#     user = models.ForeignKey(
+#         User, on_delete=models.CASCADE, null=True, blank=True)
+#     visitingHours = models.CharField(max_length=500, null=True, blank=True)
+
+#     def __str__(self):
+#         return self.visitingHours
 
 
 # Model for Patient Information

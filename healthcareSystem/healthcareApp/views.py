@@ -174,8 +174,12 @@ def doctor(request):
         visitingHours = request.POST['visitingHours']
         image = request.FILES['image']
 
+        print(visitingHours)
+
         doctorinfo = doctorInfo(fullName=fullName, mobile=mobile, speciality=speciality, degree=degree,
                                 hospitalName=hospitalName, fees=fees, visitingHours=visitingHours, image=image)
+
+        print(visitingHours)
 
         if request.user.is_authenticated:
             user = request.user
@@ -186,6 +190,21 @@ def doctor(request):
     else:
         return render(request, 'html/doctor.html')
 
+
+
+# def visitTime(request):
+#     if request.method == 'POST':
+#         if request.POST.get('visitingHours'):
+#             savedata=visitTime()
+#             savedata.visitingHours=request.POST.get('visitingHours')
+
+#             if request.user.is_authenticated:
+#                 user = request.user
+#                 savedata.user_id = user.id
+#                 savedata.save()
+#                 return redirect('doctor')
+#     else:
+#         return render(request, 'html/doctor.html')
 
 # /----- Views for All Doctors List -----/
 def doctorsList(request):

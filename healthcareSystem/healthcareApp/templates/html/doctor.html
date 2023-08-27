@@ -43,7 +43,29 @@
         </div>
         <div class="form-group mt-3">
             <label for="visitingHours">Visiting Hours:</label>
-            <input type="text" class="form-control" id="visitingHours" placeholder="Saturday-Thursday, 10.00AM-2PM & 5PM-8PM" name="visitingHours" required>
+            <!-- <input type="text" class="form-control" id="visitingHours" placeholder="Saturday-Thursday, 10.00AM-2PM & 5PM-8PM" name="visitingHours" required> -->
+            <div>
+                <input type="checkbox" id="sunday" class="chkvalues" name="visitingHours" value="Sunday">Sunday<br>
+                <!-- <div id="daysun" style="display: none">
+                    <label for="startTime">Start time: </label>
+                    <input type="time"  name="startTime" id="startTime" />
+        
+                    <label for="endTime">End time: </label>
+                    <input type="time"  name="endTime" id="endTime" />
+                </div> -->
+            </div>
+            <div>
+                <input type="checkbox" id="monday" class="chkvalues" name="visitingHours" value="Monday">Monday<br>
+                <!-- <div id="daymon" style="display: none">
+                    <label for="startTime">Start time: </label>
+                    <input type="time" name="startTime" id="startTime" />
+        
+                    <label for="endTime">End time: </label>
+                    <input type="time" name="endTime" id="endTime" />
+                </div> -->
+            </div>
+            <!-- <input type="text" class="form-control" id="visitingHours" name="visitingHours"> -->
+            
         </div>
         <div class="form-group mt-3">
             <label for="image">Upload Image:</label>
@@ -52,5 +74,19 @@
         <button type="submit" class="btn btn-primary mt-3">Submit</button>
     </form>
 </div>
+
+<!-- <script type="text/javascript">
+    function ShowHideDiv(sunday) {
+        var daysun = document.getElementById("daysun");
+        daysun.style.display = sunday.checked ? "block" : "none";
+    }
+</script>
+
+<script type="text/javascript">
+    function ShowMonday(monday) {
+        var daymon = document.getElementById("daymon");
+        daymon.style.display = monday.checked ? "block" : "none";
+    }
+</script> -->
 
 {% endblock %}
