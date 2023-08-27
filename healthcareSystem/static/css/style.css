@@ -25,6 +25,10 @@
   border-radius: 100%;
 }
 
+/* .container{
+  min-height: 100vh;
+} */
+
 #wrapper {
   overflow-x: hidden;
   background-image: linear-gradient(

@@ -15,48 +15,49 @@
         {% endfor %}
     </ul>
     {% endif %}
-        <div class="wrapper">
-            <h2>Sign Up</h2>
-            <form action='register' method="POST">
-                {% csrf_token %}
-              <div class="input-box">
+    <div class="wrapper">
+        <h2>Sign Up</h2>
+        <form action='register' method="POST">
+            {% csrf_token %}
+            <div class="input-box">
                 <input type="text" id="username" name="username" placeholder="Username" required>
-              </div>
-              <div class="input-box">
+            </div>
+            <div class="input-box">
                 <input type="text" id="email" name="email" placeholder="Email" required>
-              </div>
-              <div class="input-box">
+            </div>
+            <div class="input-box">
                 <input type="password" id="password" name="password" placeholder="Password" required>
-              </div>
-              <div class="input-box">
-                <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirm Password" required>
-              </div>
+            </div>
+            <div class="input-box">
+                <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirm Password"
+                    required>
+            </div>
 
-              <select name="patient" class="form-select mb-3 form-border" aria-label="Default select example">
+            <select name="patient" class="form-select mb-3 form-border" aria-label="Default select example">
                 <option selected>Select Type</option>
                 <option value="Patient">Patient</option>
                 <option value="Doctor">Doctor</option>
-              </select>
+            </select>
 
-              <!-- <div class="policy">
+            <!-- <div class="policy">
                 <input type="checkbox">
                 <h3>I accept all terms & condition</h3>
               </div> -->
-              <div class="input-box button" style="margin-top: 50px;">
+            <div class="input-box button" style="margin-top: 50px;">
                 <input type="Submit" value="Sign Up">
-              </div>
-              <div class="text">
+            </div>
+            <div class="text">
                 <h3>Already have an account? <a href="{% url 'login' %}">Login now</a></h3>
-              </div>
-            </form>
-        </div>      
-        <!-- <fieldset>
+            </div>
+        </form>
+    </div>
+    <!-- <fieldset>
             <div id="legend">
                 <legend class="mt-4">Sign Up</legend>
             </div>
             <div class="control-group"> -->
-                <!-- Username -->
-                <!-- <label class="control-label"  for="username">Username</label>
+    <!-- Username -->
+    <!-- <label class="control-label"  for="username">Username</label>
                 <div class="controls">
                     <input type="text" id="username" name="username" placeholder="" class="input-xlarge">
                     <p class="help-block">Username can contain any letters or numbers, without spaces</p>
@@ -64,8 +65,8 @@
             </div>
 
             <div class="control-group"> -->
-                <!-- E-mail -->
-                <!-- <label class="control-label" for="email">E-mail</label>
+    <!-- E-mail -->
+    <!-- <label class="control-label" for="email">E-mail</label>
                 <div class="controls">
                     <input type="text" id="email" name="email" placeholder="" class="input-xlarge">
                     <p class="help-block">Please provide your E-mail</p>
@@ -73,8 +74,8 @@
             </div>
 
             <div class="control-group"> -->
-                <!-- Password-->
-                <!-- <label class="control-label" for="password">Password</label>
+    <!-- Password-->
+    <!-- <label class="control-label" for="password">Password</label>
                 <div class="controls">
                     <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
                     <p class="help-block">Password should be at least 4 characters</p>
@@ -82,8 +83,8 @@
             </div>
 
             <div class="control-group"> -->
-                <!-- Password -->
-                <!-- <label class="control-label"  for="password_confirm">Password (Confirm)</label>
+    <!-- Password -->
+    <!-- <label class="control-label"  for="password_confirm">Password (Confirm)</label>
                 <div class="controls">
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="" class="input-xlarge">
                     <p class="help-block">Please confirm password</p>
@@ -97,14 +98,14 @@
             </select>
 
             <div class="control-group"> -->
-                <!-- Button -->
-                <!-- <div class="controls">
+    <!-- Button -->
+    <!-- <div class="controls">
                     <button class="btn btn-success">Sign Up</button>
                 </div>
             </div>
         </fieldset> -->
-        <!-- <h6 class="mt-4">Already have an account? <a class="text-decoration-none" href="{% url 'login' %}">Login</a></h6> -->
-    
+    <!-- <h6 class="mt-4">Already have an account? <a class="text-decoration-none" href="{% url 'login' %}">Login</a></h6> -->
+
 </div>
 
 {% endblock %}
